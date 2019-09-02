@@ -38,6 +38,7 @@ endif
 CYGWIN:=$(findstring CYGWIN, $(shell uname -s))
 LINUX:=$(findstring Linux, $(shell uname -s))
 DARWIN:=$(findstring Darwin, $(shell uname -s))
+FREEBSD:=$(findstring FreeBSD, $(shell uname -s))
 
 BUILD_CC ?= gcc
 BUILD_CXX ?= g++
@@ -68,7 +69,13 @@ BUILD_CPPFLAGS = $(INCLUDE)
 BUILD_OPTFLAGS = -O2 $(EXTRA_OPTFLAGS)
 
 ifeq ($(DARWIN),Darwin)
-# assume clang or clang compatible flags on OS X
+CLANG := yes
+else ifeq ($(FREEBSD),FreeBSD)
+CLANG := yes
+endif
+
+ifeq ($(CLANG),yes)
+# assume clang or clang compatible flags on OS X, FreeBSD
 BUILD_CFLAGS = -MD -fshort-wchar -fno-strict-aliasing -Wall -Werror \
 -Wno-deprecated-declarations -Wno-self-assign -Wno-unused-result -nostdlib -g
 else

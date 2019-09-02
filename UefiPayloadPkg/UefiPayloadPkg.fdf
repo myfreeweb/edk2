@@ -158,7 +158,6 @@ INF MdeModulePkg/Bus/Sd/SdDxe/SdDxe.inf
 #
 # Usb Support
 #
-INF MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
 INF MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
 INF MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
 INF MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf

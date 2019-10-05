@@ -485,7 +485,11 @@ InitializePciHostBridge (
                    MemApertures[MemApertureIndex]->Limit - MemApertures[MemApertureIndex]->Base + 1,
                    EFI_MEMORY_UC
                    );
-        ASSERT_EFI_ERROR (Status);
+        //ASSERT_EFI_ERROR (Status);
+        if (EFI_ERROR (Status)) {
+          DEBUG ((DEBUG_WARN, "PciHostBridge driver failed to AddMemoryMappedIoSpace - %r.\n", Status));
+          continue;
+        }
         Status = gDS->SetMemorySpaceAttributes (
                         HostAddress,
                         MemApertures[MemApertureIndex]->Limit - MemApertures[MemApertureIndex]->Base + 1,

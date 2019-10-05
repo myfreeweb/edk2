@@ -240,7 +240,7 @@ SerialReset (
   // later failure, always return EFI_SUCCESS when SetAttributes is returning
   // EFI_INVALID_PARAMETER.
   //
-  if (Status == EFI_INVALID_PARAMETER) {
+  if (Status == EFI_INVALID_PARAMETER || Status == EFI_UNSUPPORTED) {
     return EFI_SUCCESS;
   }
 

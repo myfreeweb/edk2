@@ -210,12 +210,6 @@ PlatformBootManagerAfterConsole (
   VOID
 )
 {
-  EFI_GRAPHICS_OUTPUT_BLT_PIXEL  Black;
-  EFI_GRAPHICS_OUTPUT_BLT_PIXEL  White;
-
-  Black.Blue = Black.Green = Black.Red = Black.Reserved = 0;
-  White.Blue = White.Green = White.Red = White.Reserved = 0xFF;
-
   EfiBootManagerConnectAll ();
   EfiBootManagerRefreshAllBootOption ();
 
@@ -224,12 +218,10 @@ PlatformBootManagerAfterConsole (
   //
   PlatformRegisterFvBootOption (PcdGetPtr (PcdShellFile), L"UEFI Shell", LOAD_OPTION_ACTIVE);
 
-  Print (
-    L"\n"
-    L"F2 or Down      to enter Boot Manager Menu.\n"
-    L"ENTER           to boot directly.\n"
-    L"\n"
-  );
+  //
+  // Logo show
+  //
+  BootLogoEnableLogo ();
 
 }
 
@@ -244,7 +236,32 @@ PlatformBootManagerWaitCallback (
   UINT16          TimeoutRemain
 )
 {
-  return;
+  EFI_GRAPHICS_OUTPUT_BLT_PIXEL_UNION Black;
+  EFI_GRAPHICS_OUTPUT_BLT_PIXEL_UNION Fg;
+  UINT16                              TimeoutInitial;
+
+  TimeoutInitial = PcdGet16 (PcdPlatformBootTimeOut);
+
+  //
+  // If PcdPlatformBootTimeOut is set to zero, then we consider
+  // that no progress update should be enacted (since we'd only
+  // ever display a one-shot progress of either 0% or 100%).
+  //
+  if (TimeoutInitial == 0) {
+    return;
+  }
+
+  Black.Raw = 0x00000000;
+  Fg.Raw = 0x00BBBBBB;
+
+  BootLogoUpdateProgress (
+    Fg.Pixel,
+    Black.Pixel,
+    L"F2 or Down: Options | Enter: Boot | Powered by DankCore",
+    Fg.Pixel,
+    (TimeoutInitial - TimeoutRemain) * 100 / TimeoutInitial,
+    0
+    );
 }
 
 /**
@@ -260,6 +277,12 @@ PlatformBootManagerUnableToBoot (
   VOID
   )
 {
+  Print (
+    L"\n\n\n\n\n"
+    L"No boot option could be launched :(\n"
+    L"\n\n\n\n\n"
+  );
+
   return;
 }
 
